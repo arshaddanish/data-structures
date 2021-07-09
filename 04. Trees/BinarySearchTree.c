@@ -24,6 +24,67 @@ struct node *insert(struct node *temp, int data)
   return temp;
 }
 
+// .........
+
+int max(int a, int b)
+{
+  return a > b ? a : b;
+}
+
+int height(struct node *temp)
+{
+  if (temp == NULL)
+    return -1;
+  return max(height(temp->left), height(temp->right)) + 1;
+}
+
+struct node *inorderPredecessor(struct node *temp)
+{
+  if (temp->right)
+    return inorderPredecessor(temp->right);
+  return temp;
+}
+
+struct node *inorderSuccessor(struct node *temp)
+{
+  if (temp->left)
+    return inorderSuccessor(temp->left);
+  return temp;
+}
+
+struct node *delete (struct node *temp, int data)
+{
+  if (temp == NULL)
+    return NULL;
+  if (data == temp->data)
+  {
+    if (temp->left == NULL && temp->right == NULL)
+    {
+      free(temp);
+      return NULL;
+    }
+    if (height(temp->left) > height(temp->right))
+    {
+      struct node *temp2 = inorderPredecessor(temp->left);
+      temp->data = temp2->data;
+      temp->left = delete (temp->left, temp2->data);
+    }
+    else
+    {
+      struct node *temp2 = inorderSuccessor(temp->right);
+      temp->data = temp2->data;
+      temp->right = delete (temp->right, temp2->data);
+    }
+  }
+  if (data < temp->data)
+    temp->left = delete (temp->left, data);
+  else
+    temp->right = delete (temp->right, data);
+  return temp;
+}
+
+// .........
+
 struct node *search(struct node *temp, int data)
 {
   if (temp == NULL)
@@ -68,6 +129,9 @@ void main()
       break;
 
     case 2:
+      printf("Enter data\n");
+      scanf("%d", &data);
+      root = delete (root, data);
       break;
 
     case 3:
