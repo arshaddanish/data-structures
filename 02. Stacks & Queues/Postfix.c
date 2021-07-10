@@ -36,18 +36,37 @@ int isEmpty()
   return 0;
 }
 
-int prio(char c)
+int ICP(char c)
 {
   switch (c)
   {
-  case '/':
-  case '*':
-    return 2;
   case '+':
   case '-':
     return 1;
+  case '/':
+  case '*':
+    return 3;
+  case '^':
+    return 6;
+  case '(':
+    return 7;
+  }
+}
+
+int ISP(char c)
+{
+  switch (c)
+  {
   case '(':
     return 0;
+  case '+':
+  case '-':
+    return 2;
+  case '/':
+  case '*':
+    return 4;
+  case '^':
+    return 5;
   }
 }
 
@@ -58,10 +77,6 @@ void convert(char *exp, char *post)
   {
     switch (exp[i])
     {
-    case '(':
-      push(exp[i]);
-      break;
-
     case ')':
       while (stack[top] != '(')
       {
@@ -74,7 +89,7 @@ void convert(char *exp, char *post)
     case '*':
     case '+':
     case '-':
-      while (!isEmpty() && prio(exp[i]) <= prio(stack[top]))
+      while (!isEmpty() && ICP(exp[i]) < ISP(stack[top]))
       {
         post[k++] = pop();
       }
