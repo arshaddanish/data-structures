@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #define SIZE 100
 
 char stack[SIZE];
@@ -144,7 +145,7 @@ void evaluate(char *post)
     case '^':
       y = pop() - '0';
       x = pop() - '0';
-      push(y ^ x + '0');
+      push(pow(x, y) + '0');
       break;
 
     default:
