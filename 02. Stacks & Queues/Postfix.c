@@ -89,6 +89,7 @@ void convert(char *exp, char *post)
     case '*':
     case '+':
     case '-':
+    case '^':
       while (!isEmpty() && ICP(exp[i]) < ISP(stack[top]))
       {
         post[k++] = pop();
@@ -115,6 +116,19 @@ void evaluate(char *post)
   {
     switch (post[i])
     {
+
+    case '+':
+      y = pop() - '0';
+      x = pop() - '0';
+      push(x + y + '0');
+      break;
+
+    case '-':
+      y = pop() - '0';
+      x = pop() - '0';
+      push(x - y + '0');
+      break;
+
     case '/':
       y = pop() - '0';
       x = pop() - '0';
@@ -127,16 +141,10 @@ void evaluate(char *post)
       push(x * y + '0');
       break;
 
-    case '+':
+    case '^':
       y = pop() - '0';
       x = pop() - '0';
-      push(x + y + '0');
-      break;
-
-    case '-':
-      y = pop() - '0';
-      x = pop() - '0';
-      push(x - y + '0');
+      push(y ^ x + '0');
       break;
 
     default:
