@@ -86,10 +86,11 @@ void convert(char *exp, char *post)
       pop();
       break;
 
-    case '/':
-    case '*':
+    case '(':
     case '+':
     case '-':
+    case '/':
+    case '*':
     case '^':
       while (!isEmpty() && ICP(exp[i]) < ISP(stack[top]))
       {

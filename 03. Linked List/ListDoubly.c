@@ -14,8 +14,8 @@ int length()
   temp = head;
   while (temp != NULL)
   {
-    temp = temp->next;
     len++;
+    temp = temp->next;
   }
   return len;
 }
