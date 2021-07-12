@@ -30,11 +30,7 @@ char pop()
 
 int isEmpty()
 {
-  if (top == -1)
-  {
-    return 1;
-  }
-  return 0;
+  return top == -1 ? 1 : 0;
 }
 
 int ICP(char c)
@@ -69,6 +65,20 @@ int ISP(char c)
   case '^':
     return 5;
   }
+}
+
+int isOperator(char c)
+{
+  switch (c)
+  {
+  case '+':
+  case '-':
+  case '/':
+  case '*':
+  case '^':
+    return 1;
+  }
+  return 0;
 }
 
 void convert(char *exp, char *post)
@@ -116,36 +126,30 @@ void evaluate(char *post)
   int x, y;
   for (int i = 0; i < strlen(post); i++)
   {
-    switch (post[i])
+    if (isOperator(post[i]))
     {
-
-    case '+':
       y = pop() - '0';
       x = pop() - '0';
+    }
+    switch (post[i])
+    {
+    case '+':
       push(x + y + '0');
       break;
 
     case '-':
-      y = pop() - '0';
-      x = pop() - '0';
       push(x - y + '0');
       break;
 
     case '/':
-      y = pop() - '0';
-      x = pop() - '0';
       push(x / y + '0');
       break;
 
     case '*':
-      y = pop() - '0';
-      x = pop() - '0';
       push(x * y + '0');
       break;
 
     case '^':
-      y = pop() - '0';
-      x = pop() - '0';
       push(pow(x, y) + '0');
       break;
 
@@ -166,7 +170,6 @@ int main()
   printf("Postfix Expression: %s\n", post);
 
   evaluate(post);
-
   printf("Value: %d\n", stack[top] - '0');
 
   return 0;
