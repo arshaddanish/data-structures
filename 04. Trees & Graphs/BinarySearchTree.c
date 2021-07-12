@@ -65,15 +65,15 @@ struct node *delete (struct node *temp, int data)
     }
     if (height(temp->left) > height(temp->right))
     {
-      struct node *temp2 = inorderPredecessor(temp->left);
-      temp->data = temp2->data;
-      temp->left = delete (temp->left, temp2->data);
+      struct node *pre = inorderPredecessor(temp->left);
+      temp->data = pre->data;
+      temp->left = delete (temp->left, pre->data);
     }
     else
     {
-      struct node *temp2 = inorderSuccessor(temp->right);
-      temp->data = temp2->data;
-      temp->right = delete (temp->right, temp2->data);
+      struct node *suc = inorderSuccessor(temp->right);
+      temp->data = suc->data;
+      temp->right = delete (temp->right, suc->data);
     }
   }
   if (data < temp->data)
