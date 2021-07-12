@@ -27,46 +27,61 @@ char pop()
   return stack[top--];
 }
 
-int main()
+int isOperator(char c)
 {
-  char exp[20];
-  printf("Enter expression\n");
-  scanf("%[^\n]%*c", exp);
-
-  int x, y;
-  for (int i = strlen(exp) - 1; i >= 0; i--)
+  switch (c)
   {
-    switch (exp[i])
+  case '+':
+  case '-':
+  case '/':
+  case '*':
+  case '^':
+    return 1;
+  }
+  return 0;
+}
+
+void evaluate(char *pre)
+{
+  int x, y;
+  for (int i = strlen(pre) - 1; i >= 0; i--)
+  {
+    if (isOperator(pre[i]))
     {
-    case '/':
       x = pop() - '0';
       y = pop() - '0';
+    }
+    switch (pre[i])
+    {
+    case '/':
       push(x / y + '0');
       break;
 
     case '*':
-      x = pop() - '0';
-      y = pop() - '0';
       push(x * y + '0');
       break;
 
     case '+':
-      x = pop() - '0';
-      y = pop() - '0';
       push(x + y + '0');
       break;
 
     case '-':
-      x = pop() - '0';
-      y = pop() - '0';
       push(x - y + '0');
       break;
 
     default:
-      push(exp[i]);
+      push(pre[i]);
     }
   }
+}
 
+int main()
+{
+  char pre[20];
+  printf("Enter prefix expression\n");
+  scanf("%[^\n]%*c", pre);
+
+  evaluate(pre);
   printf("Value: %d\n", stack[top] - '0');
 
   return 0;
