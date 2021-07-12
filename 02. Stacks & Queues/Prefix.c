@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #define SIZE 100
 
 char stack[SIZE];
@@ -27,6 +28,45 @@ char pop()
   return stack[top--];
 }
 
+int isEmpty()
+{
+  return top == -1 ? 1 : 0;
+}
+
+int ICP(char c)
+{
+  switch (c)
+  {
+  case '+':
+  case '-':
+    return 2;
+  case '/':
+  case '*':
+    return 4;
+  case '^':
+    return 5;
+  case '(':
+    return 7;
+  }
+}
+
+int ISP(char c)
+{
+  switch (c)
+  {
+  case '(':
+    return 0;
+  case '+':
+  case '-':
+    return 1;
+  case '/':
+  case '*':
+    return 3;
+  case '^':
+    return 6;
+  }
+}
+
 int isOperator(char c)
 {
   switch (c)
@@ -41,6 +81,64 @@ int isOperator(char c)
   return 0;
 }
 
+void reverse(char *exp)
+{
+  for (int i = 0; i < strlen(exp); i++)
+  {
+    if (exp[i] == '(')
+      push(')');
+    else if (exp[i] == ')')
+      push('(');
+    else
+      push(exp[i]);
+  }
+
+  for (int i = 0; i < strlen(exp); i++)
+  {
+    exp[i] = pop();
+  }
+}
+
+void convert(char *exp, char *pre)
+{
+  int k = 0;
+  for (int i = 0; i < strlen(exp); i++)
+  {
+    switch (exp[i])
+    {
+    case ')':
+      while (stack[top] != '(')
+      {
+        pre[k++] = pop();
+      }
+      pop();
+      break;
+
+    case '(':
+    case '+':
+    case '-':
+    case '/':
+    case '*':
+    case '^':
+      while (!isEmpty() && ICP(exp[i]) < ISP(stack[top]))
+      {
+        pre[k++] = pop();
+      }
+      push(exp[i]);
+      break;
+
+    default:
+      pre[k++] = exp[i];
+    }
+  }
+
+  while (!isEmpty())
+  {
+    pre[k++] = pop();
+  }
+  pre[k] = '\0';
+}
+
 void evaluate(char *pre)
 {
   int x, y;
@@ -53,6 +151,14 @@ void evaluate(char *pre)
     }
     switch (pre[i])
     {
+    case '+':
+      push(x + y + '0');
+      break;
+
+    case '-':
+      push(x - y + '0');
+      break;
+
     case '/':
       push(x / y + '0');
       break;
@@ -61,12 +167,8 @@ void evaluate(char *pre)
       push(x * y + '0');
       break;
 
-    case '+':
-      push(x + y + '0');
-      break;
-
-    case '-':
-      push(x - y + '0');
+    case '^':
+      push(pow(x, y) + '0');
       break;
 
     default:
@@ -77,9 +179,15 @@ void evaluate(char *pre)
 
 int main()
 {
-  char pre[20];
-  printf("Enter prefix expression\n");
-  scanf("%[^\n]%*c", pre);
+  char exp[20], pre[20];
+  printf("Enter expression\n");
+  scanf("%[^\n]%*c", exp);
+
+  reverse(exp);
+  convert(exp, pre);
+  reverse(pre);
+  printf("Prefix expression\n");
+  printf("%s\n", pre);
 
   evaluate(pre);
   printf("Value: %d\n", stack[top] - '0');
