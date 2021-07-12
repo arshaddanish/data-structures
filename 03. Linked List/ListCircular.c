@@ -35,6 +35,7 @@ void insertBegin()
     return;
   }
 
+  temp = head;
   while (temp->next != head)
   {
     temp = temp->next;
@@ -57,6 +58,7 @@ void insertEnd()
     return;
   }
 
+  temp = head;
   while (temp->next != head)
   {
     temp = temp->next;
